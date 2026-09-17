@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="blobby.vip — a personal start page with themes, layouts, and lightweight effects."><title>blobby.vip</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%237d93ff'/%3E%3Ctext x='18' y='47' font-size='48' font-family='sans-serif' font-weight='bold' fill='%23101525'%3Eb%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="./style.css"><script src="./core.js"></script><script src="./app.js" defer></script>
+</head><body>
+<div class="atmosphere" aria-hidden="true"></div><canvas id="snowCanvas" aria-hidden="true" hidden></canvas>
+<header><a class="wordmark" href="./">blobby<span>.vip</span></a><div class="header-actions"><span class="badge" id="fastBadge" hidden>Performance mode</span><button id="settingsButton" aria-haspopup="dialog"><span aria-hidden="true">⚙</span> Settings</button></div></header>
+<section id="browserChrome" class="browser-chrome" aria-label="Browser controls">
+  <div class="tab-strip"><div id="tabList" class="tab-list" role="tablist" aria-label="Open tabs"></div><button id="newTab" class="tab-add" type="button" aria-label="New tab">＋</button></div>
+  <form id="addressForm" class="address-row" role="search">
+    <button id="backButton" type="button" class="nav-button" aria-label="Back">←</button>
+    <button id="forwardButton" type="button" class="nav-button" aria-label="Forward">→</button>
+    <button id="refreshButton" type="button" class="nav-button" aria-label="Refresh">↻</button>
+    <button id="homeButton" type="button" class="nav-button" aria-label="Home">⌂</button>
+    <input id="addressBar" aria-label="Search or enter address" placeholder="Search or enter address" autocomplete="off" spellcheck="false">
+    <button class="primary address-go" type="submit">Go</button>
+    <button id="externalButton" type="button" class="nav-button external-button" aria-label="Open current page in a new browser tab" title="Open externally">↗</button>
+  </form>
+  <div id="embedNotice" class="embed-notice" hidden>Some websites block embedded browsers. If a page does not load here, use ↗ to open it directly.</div>
+</section>
+<div id="browserFrames" class="browser-frames" hidden></div>
+<main id="home">
+<div class="intro"><h1>blobby<span>.vip</span></h1><p id="subtitle">made by panga</p></div>
+<div class="search-area"><form id="searchForm" class="surface search" role="search"><span aria-hidden="true" class="search-icon">⌕</span><input id="query" aria-label="Search or enter a website" placeholder="Search or enter a website" autocomplete="off" spellcheck="false" list="suggestions"><datalist id="suggestions"></datalist><button class="primary" type="submit">Go <span aria-hidden="true">→</span></button></form><div class="search-note"><span id="searchHint"></span><kbd>/ to search</kbd></div></div>
+<div class="sections" id="sections">
+<section id="shortcutSection"><div class="section-head"><h2>Quick access</h2><button id="manageButton" class="quiet">Edit shortcuts</button></div><div class="shortcut-grid" id="shortcuts"></div></section>
+<section id="recentSection"><div class="section-head"><h2>Recently opened</h2><button id="clearButton" class="quiet">Clear</button></div><div id="recent" class="surface recent"></div></section>
+</div><p id="status" role="status"></p>
+<noscript><p>Enable JavaScript to use search and customization.</p></noscript>
+</main>
+<dialog id="settings" aria-labelledby="settingsTitle">
+<div class="dialog-head"><div><span class="eyebrow">YOUR SPACE</span><h2 id="settingsTitle">Make it yours.</h2></div><button data-close="settings" aria-label="Close settings">✕</button></div>
+<div class="settings-layout"><nav id="settingsNav" aria-label="Settings categories"></nav><div id="settingsPanels"></div></div>
+<div class="dialog-foot"><span id="saveStatus" role="status">Saved automatically on this device</span><button data-close="settings" class="primary">Done</button></div>
+</dialog>
+<dialog id="shortcutDialog" aria-labelledby="shortcutTitle"><div class="dialog-head"><h2 id="shortcutTitle">Your shortcuts</h2><button data-close="shortcutDialog" aria-label="Close shortcuts">✕</button></div><div class="dialog-body"><p class="muted">Drag to reorder, or use the move buttons. Up to 12 shortcuts.</p><div id="shortcutEditor"></div><form id="shortcutForm"><h3 id="editTitle">Add shortcut</h3><label>Name<input id="shortcutName" maxlength="32" required placeholder="My favorite site"></label><label>Website address<input id="shortcutUrl" required placeholder="https://example.com"></label><p id="shortcutError" role="alert"></p><div class="actions"><button type="button" id="cancelEdit">Cancel edit</button><button class="primary" id="saveShortcut">Add shortcut</button></div></form></div></dialog>
+<dialog id="questionDialog" aria-labelledby="questionTitle"><form id="questionForm" class="dialog-body"><h2 id="questionTitle"></h2><p id="questionDetail" class="muted"></p><label id="questionLabel">Name<input id="questionInput" maxlength="40"></label><div class="actions"><button type="button" id="questionCancel">Cancel</button><button id="questionAccept" class="primary">Save</button></div></form></dialog>
+</body></html>
