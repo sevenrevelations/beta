@@ -1,66 +1,109 @@
 # blobby.vip
 
-A dependency-free homepage for a browser or MIT App Inventor CustomWebView.
+A customizable browser-controller UI built for GitHub Pages and MIT App Inventor.
 
-## Publish on GitHub Pages
+## What changed in this build
 
-1. Extract the download. Upload `index.html`, `style.css`, `core.js`, and `app.js` together to the root of your GitHub repository. Keep filenames unchanged.
-2. Open repository **Settings → Pages**.
-3. Select **Deploy from a branch**, then **main** and **/ (root)**. Save.
-4. Use the URL GitHub displays once deployment finishes. It will normally look like `https://YOUR-USERNAME.github.io/YOUR-REPOSITORY/`.
+- App Inventor bridge using `window.AppInventor.setWebViewString()`
+- No iframe-based external browsing in the final app architecture
+- Desktop/GitHub demo mode with external-open fallback
+- Multi-tab UI with per-tab URL history and restore
+- Back, Forward, Refresh, Home, address/search bar
+- 19 built-in themes
+- Full custom theme editor for background, panels, text, accents, borders, and glow
+- Custom theme save, rename, duplicate, delete, export, and import
+- RGB mode with selectable RGB zones
+- Ambient effects: snow, rain, stars, particles, fireflies, floating orbs, aurora, fog, Matrix rain, bubbles, shooting stars, gradient waves, RGB glow, and dust
+- Rain lightning and glass ambience
+- Effect density, speed, opacity, and size controls
+- Performance mode
+- Solid, gradient, image URL, and uploaded-image backgrounds
+- 8 layout presets
+- Drag-and-drop layout edit mode
+- Saved layouts and layout lock
+- Homepage clock, favorites, recent pages, and desktop preview controls
+- Shortcut folders, icons, editing, and ordering
+- Search-engine selection
+- Customization profiles
+- Full settings export/import
+- Versioned localStorage state with migration from the older `blobby.v3` project
+- Mobile responsive settings and browser chrome
+- Keyboard shortcuts: `/` search, Ctrl/Cmd+L address bar, Ctrl/Cmd+T new tab, Ctrl/Cmd+W close tab
+- Reduced-motion support
 
-No build, npm install, API key, or server is required. The README and tests are optional uploads. This package contains source files, not an App Inventor project.
+## Files
 
-[GitHub's publishing instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+- `index.html` — application structure
+- `style.css` — responsive UI, themes, RGB styling, settings, layouts
+- `core.js` — state, URL handling, tabs, migration, persistence helpers
+- `themes.js` — theme presets and CSS-variable application
+- `browser-bridge.js` — MIT App Inventor WebViewString bridge
+- `effects.js` — canvas and CSS ambient effects engine
+- `layout.js` — layout presets and drag/drop ordering
+- `app.js` — browser UI, settings, profiles, shortcuts, navigation
+- `APP_INVENTOR_SETUP.md` — exact App Inventor integration instructions
+- `tests/check.cjs` — functional/static checks
 
-## Connect to your App Inventor project
+## GitHub Pages
 
-Replace the old homepage URL in the project's startup, Home, and new-tab blocks with your GitHub Pages URL. Also replace comparisons against the old homepage URL, which your project uses to label new tabs and clear the address bar. Keep the final slash consistent.
+Keep `index.html` at repository root. In GitHub:
 
-The homepage uses direct same-tab navigation, never an iframe. Your native App Inventor toolbar stays outside the webpage. Make sure link navigation and JavaScript are enabled in your WebView. The settings customize only the homepage, not other websites or the native toolbar. This does not bypass school/network restrictions or websites that prohibit embedded-app login.
+1. Settings → Pages
+2. Source: Deploy from a branch
+3. Branch: `main`
+4. Folder: `/ (root)`
 
-Use the GitHub Pages URL, not a github.com repository link or a raw source link. The blobby.vip brand does not register or connect the actual blobby.vip domain.
+Then use the generated GitHub Pages URL for `WebViewer_UI.HomeUrl` in App Inventor.
 
-## Included features
+## App Inventor
 
-- Six previewable themes: Midnight, Arctic, Aurora, Sunset, Ocean, Monochrome.
-- Hue slider, color picker, hex input, contrast-adjusted accent text and button labels.
-- Light, dark and device-matching modes; larger text.
-- Named custom themes with load, rename and delete.
-- Optional gradient, animated gradient, hover movement, shadows, glow, glass, entrance animation and snow.
-- Master effects switch; reduced-motion support; snow density and speed.
-- Centered, Compact, Dashboard and Minimal layouts with previews.
-- Content width, spacing, tile height, desktop columns and section visibility controls.
-- Named custom layouts, including shortcut order, with load, rename and delete.
-- Shortcut editing and desktop drag reorder, plus touch/keyboard move buttons.
-- Google, DuckDuckGo and Bing; recent entries and search suggestions.
-- Separate appearance, layout and all-settings resets with confirmation.
-- Old blobby settings/shortcuts/recent data migrate on the same website origin.
+See **APP_INVENTOR_SETUP.md**.
 
-## Performance behavior
+The core idea is:
 
-Performance mode cancels requestAnimationFrame for snow, clears the particle array, releases the canvas bitmap, removes gradients, shadows, glow and backdrop blur, and disables CSS movement. It also skips shortcut icons, the recent list and suggestions. Your preferences are not overwritten.
+```text
+WebViewer_UI
+  GitHub-hosted blobby.vip controls
+        ↓ WebViewString commands
+App Inventor blocks
+        ↓
+WebViewer_Browser
+  actual external website
+```
 
-Snow is off by default, capped at 100 particles and uses one canvas at CSS-pixel resolution. It stops on page hide, reduced motion, performance mode or master-effects off. There are no polling timers, remote fonts, image downloads, analytics or effect libraries.
+## App Inventor commands
 
-No speedup percentage is claimed. This reduces homepage rendering work; it cannot improve external websites or change native WebView settings.
+blobby.vip can send:
 
-## Saved data
+```text
+NAVIGATE|https://example.com/
+BACK|https://previous.example/
+FORWARD|https://next.example/
+REFRESH
+HOME
+SHOW_HOME|tabId
+NEW_TAB|tabId
+CLOSE_TAB|tabId
+SWITCH_TAB|tabId
+CLOSE_OTHER_TABS|tabId
+OPEN_EXTERNAL|https://example.com/
+EXPAND_UI|settings
+RESTORE_UI|browser
+```
 
-Preferences, up to 12 shortcuts, 20 recent entries, 20 custom themes and 20 custom layouts save in localStorage under `blobby.v3`. Turning recording off stops future entries; use Clear to erase existing entries. Nothing is uploaded to a backend.
+App Inventor can send back to the UI by setting `WebViewer_UI.WebViewString`:
 
-Settings belong to the current browser and website origin. Moving from the ChatGPT-hosted URL to GitHub Pages starts fresh local settings. If storage is blocked, navigation and customization continue for the current page session.
+```text
+URL|https://example.com/page
+TITLE|Example Page
+HOME_SHOWN
+CONNECTED
+```
 
-## Validation
+## Local storage
 
-Run `node tests/check.cjs` if Node.js is installed. No dependencies are needed.
+The app stores preferences under `blobby.v5`. Background uploads are limited to 2 MB to reduce the risk of exceeding browser localStorage limits.
 
-Checks cover search encoding, unsafe URL rejection, contrast across all presets, migration, custom theme/layout persistence, shortcuts and reorder, blocked storage, snow cleanup, reduced motion and performance overrides.
+## Performance note
 
-The automated interaction checks use a lightweight DOM harness. They are not a rendered-browser test, and this release has not been tested on a physical Chromebook or inside AI Companion. Check the layout and interactions on your target device after deployment; no on-device timing benchmark has been performed.
-
-In the original Sites checkout, web files are in `dist/`. In the GitHub download they are at the archive root. The test script supports both structures.
-
-
-## Browser shell
-This build includes a lightweight tabbed browser UI with back, forward, refresh, home, search/address navigation, up to 8 tabs, and an external-open fallback. Some websites block iframe embedding via their security headers; use the ↗ button for those sites. For a true unrestricted browser inside MIT App Inventor, connect equivalent controls to a native WebViewer.
+Running many canvas effects, blur, RGB, animated gradients, and large background images at the same time can be expensive on a phone. Performance Mode keeps the selected settings saved but temporarily disables the heaviest rendering work.
